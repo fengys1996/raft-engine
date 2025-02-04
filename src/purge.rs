@@ -112,11 +112,15 @@ where
                 // 2. Must rewrite tombstones BEFORE rewrite entries, or entries from recreated
                 //    region might be lost after restart.
                 self.rewrite_append_queue_tombstones()?;
-                should_compact.extend(self.rewrite_or_compact_append_queue(
-                    rewrite_watermark,
-                    compact_watermark,
-                    &mut rewrite_candidate_regions,
-                )?);
+
+                // Disable rewrite
+                if !self.cfg.disable_rewrite {
+                    should_compact.extend(self.rewrite_or_compact_append_queue(
+                        rewrite_watermark,
+                        compact_watermark,
+                        &mut rewrite_candidate_regions,
+                    )?);
+                }
 
                 if append_queue_barrier == first_append && first_append < latest_append {
                     warn!("Unable to purge expired files: blocked by barrier");

@@ -121,6 +121,10 @@ pub struct Config {
     ///
     /// Default: None
     pub prefill_limit: Option<ReadableSize>,
+
+    /// Whether to disable log rewrite. Since log rewrite may cause additional
+    /// I/O and CPU overhead, so provide an option to disable it.
+    pub disable_rewrite: bool,
 }
 
 impl Default for Config {
@@ -144,6 +148,7 @@ impl Default for Config {
             enable_log_recycle: true,
             prefill_for_recycle: false,
             prefill_limit: None,
+            disable_rewrite: false,
         };
         // Test-specific configurations.
         #[cfg(test)]
